@@ -27,6 +27,22 @@ def emotion_detector(text_to_analyze):
     }
     return emotion_scores
     
+
+def start_here(input_text):
+    detected_emotions = emotion_detector(input_text)
+    temp_object = {
+        "source_text": input_text,
+        "emotionPredictions": detected_emotions
+    }
+    emotion_predictor(temp_object)
     
     
-def emotion_predictor():
+    
+    
+def emotion_predictor(detected_text):
+    # here is the sample code I search def emotion_predictor(detected_text):
+    if all(value is None for value in detected_text.values()):
+        return detected_text
+    if detected_text['emotionPredictions'] is not None:
+        emotions = detected_text['emotionPredictions']
+        anger = emotions['anger']
