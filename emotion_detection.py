@@ -5,20 +5,26 @@ def emotion_detector(text_to_analyze):
     URL = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
     Headers = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     Input_json = { "raw_document": { "text": text_to_analyze } }
-    response = requests.post(URL, json = Input_json, headers=Headers)
     
-    if response.status_code == 200:
-        return response.json()
-    else:
-        # Handling 400 and other potential errors
-        return {
-            'anger': None,
-            'disgust': None,
-            'fear': None,
-            'joy': None,
-            'sadness': None,
-            'dominant_emotion': None
-        }
+    try:
+        response = requests.post(URL, json=Input_json, headers=Headers)
+        if response.status_code == 200:
+            response_dict = response.json()  # Convert the response to a dictionary
+            return response_dict
+        elif response.status_code == 400:
+            # Handle 400 status code by returning the dictionary with None values
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+            }
+    except requests.RequestException as e:
+        print(f"Error calling the API: {e}")
+        return None
+    
 def emotion_predictor(detected_text):
     if isinstance(detected_text, dict):
         # Check if the input is a dictionary
